@@ -1,32 +1,111 @@
-name: "Три Королевства"
-description: "Классический сценарий с тремя враждующими нациями"
+scenario:
+  name: "Три Королевства"
+  version: 1
+  author: "Admin"
 
-nations:
-  - name: "Северное Королевство"
-    capital: "Winterhold"
-    leader: "00000000-0000-0000-0000-000000000001"
-    towns:
-      - name: "Winterhold"
-        mayor: "00000000-0000-0000-0000-000000000001"
-      - name: "Frostville"
-        mayor: "00000000-0000-0000-0000-000000000002"
+  world:
+    name: "overworld"
+    seed: 42069
+    border_radius: 480
+    environment: NORMAL
+    generate_structures: true
 
-  - name: "Южная Империя"
-    capital: "Sunspire"
-    leader: "00000000-0000-0000-0000-000000000003"
-    towns:
-      - name: "Sunspire"
-        mayor: "00000000-0000-0000-0000-000000000003"
-      - name: "Goldport"
-        mayor: "00000000-0000-0000-0000-000000000004"
+  nations:
+    northern_kingdom:
+      name: "Северное Королевство"
+      color: "#1E90FF"
+      leader: "KingNorth"
+      government: "MONARCHY"
+      description: "Холодные земли закалённых воинов"
+      allies: [eastern_republic]
+      enemies: [dark_empire]
+      towns:
+        winterhold:
+          name: "Винтерхолд"
+          is_capital: true
+          mayor: "KingNorth"
+          center_chunk: [0, -20]
+          radius: 8
+          color: "#4169E1"
+          pvp: false
+          explosions: false
+        frostwall:
+          name: "Морозная Стена"
+          is_capital: false
+          mayor: "GuardCaptain"
+          center_chunk: [-10, -15]
+          radius: 5
+          color: "#6495ED"
+          pvp: true
+          explosions: false
 
-  - name: "Вольные Земли"
-    capital: "Freedale"
-    leader: "00000000-0000-0000-0000-000000000005"
-    towns:
-      - name: "Freedale"
-        mayor: "00000000-0000-0000-0000-000000000005"
+    eastern_republic:
+      name: "Восточная Республика"
+      color: "#32CD32"
+      leader: "PresidentEast"
+      government: "REPUBLIC"
+      description: "Торговая республика с развитой экономикой"
+      allies: [northern_kingdom]
+      enemies: []
+      towns:
+        tradecity:
+          name: "Торговый Город"
+          is_capital: true
+          mayor: "PresidentEast"
+          center_chunk: [20, 5]
+          radius: 9
+          color: "#00FF00"
+          pvp: false
+          explosions: false
+        port_haven:
+          name: "Порт Хейвен"
+          is_capital: false
+          mayor: "Admiral"
+          center_chunk: [25, 15]
+          radius: 6
+          color: "#228B22"
+          pvp: true
+          explosions: false
 
-towns:
-  - name: "Одинокий Хутор"
-    mayor: "00000000-0000-0000-0000-000000000006"
+    dark_empire:
+      name: "Тёмная Империя"
+      color: "#8B0000"
+      leader: "DarkLord"
+      government: "DICTATORSHIP"
+      description: "Империя тьмы"
+      allies: []
+      enemies: [northern_kingdom]
+      towns:
+        dark_citadel:
+          name: "Тёмная Цитадель"
+          is_capital: true
+          mayor: "DarkLord"
+          center_chunk: [-5, 20]
+          radius: 10
+          color: "#FF0000"
+          pvp: true
+          explosions: true
+        shadow_port:
+          name: "Теневой Порт"
+          is_capital: false
+          mayor: "ShadowMaster"
+          center_chunk: [-15, 15]
+          radius: 5
+          color: "#B22222"
+          pvp: true
+          explosions: true
+
+  fill_rules:
+    auto_fill_land: true
+    fill_method: "VORONOI"
+    skip_water_chunks: true
+    water_threshold: 0.75
+
+  diplomacy:
+    wars:
+      - attacker: dark_empire
+        defender: northern_kingdom
+        name: "Война Тьмы"
+    alliances:
+      - members: [northern_kingdom, eastern_republic]
+        name: "Северо-Восточный Альянс"
