@@ -4,61 +4,120 @@ import java.util.*;
 
 public class Nation {
 
+    public static final int MAX_CHUNKS = 500;
+
+    private final String id;
     private String name;
-    private UUID leader;
-    private String capitalTownName;
-    private final Set<String> memberTowns = new HashSet<>();
+    private String capitalTownId;
+    private String leaderName;
+    private String color;
+    private String description;
+    private String governmentType = "MONARCHY";
+    private final List<String> townIds = new ArrayList<>();
     private final Set<String> allies = new HashSet<>();
     private final Set<String> enemies = new HashSet<>();
-    private long createdAt;
+    private boolean atWar = false;
 
-    public Nation(String name, UUID leader, String capitalTownName) {
+    public Nation(String id, String name, String color) {
+        this.id = id;
         this.name = name;
-        this.leader = leader;
-        this.capitalTownName = capitalTownName;
-        this.memberTowns.add(capitalTownName);
-        this.createdAt = System.currentTimeMillis();
+        this.color = color;
     }
 
-    public boolean addTown(String townName) {
-        return memberTowns.add(townName);
+    public int getTotalChunks(Map<String, Town> allTowns) {
+        int total = 0;
+        for (String townId : townIds) {
+            Town town = allTowns.get(townId);
+            if (town != null) {
+                total += town.getChunkCount();
+            }
+        }
+        return total;
     }
 
-    public boolean removeTown(String townName) {
-        if (townName.equals(capitalTownName)) return false;
-        return memberTowns.remove(townName);
+    public boolean canClaimMore(Map<String, Town> allTowns) {
+        return getTotalChunks(allTowns) < MAX_CHUNKS;
     }
 
-    public boolean hasTown(String townName) {
-        return memberTowns.contains(townName);
+    public void addTown(String townId) {
+        if (!townIds.contains(townId)) {
+            townIds.add(townId);
+        }
     }
 
-    public void addAlly(String nationName) {
-        enemies.remove(nationName);
-        allies.add(nationName);
+    public void removeTown(String townId) {
+        townIds.remove(townId);
     }
 
-    public void addEnemy(String nationName) {
-        allies.remove(nationName);
-        enemies.add(nationName);
+    public String getId() {
+        return id;
     }
 
-    public boolean isAlly(String nationName) { return allies.contains(nationName); }
-    public boolean isEnemy(String nationName) { return enemies.contains(nationName); }
+    public String getName() {
+        return name;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public UUID getLeader() { return leader; }
-    public void setLeader(UUID leader) { this.leader = leader; }
+    public String getCapitalTownId() {
+        return capitalTownId;
+    }
 
-    public String getCapitalTownName() { return capitalTownName; }
-    public void setCapitalTownName(String capitalTownName) { this.capitalTownName = capitalTownName; }
+    public void setCapitalTownId(String capitalTownId) {
+        this.capitalTownId = capitalTownId;
+    }
 
-    public Set<String> getMemberTowns() { return Collections.unmodifiableSet(memberTowns); }
-    public Set<String> getAllies() { return Collections.unmodifiableSet(allies); }
-    public Set<String> getEnemies() { return Collections.unmodifiableSet(enemies); }
+    public String getLeaderName() {
+        return leaderName;
+    }
 
-    public long getCreatedAt() { return createdAt; }
-    public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
+    public void setLeaderName(String leaderName) {
+        this.leaderName = leaderName;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getGovernmentType() {
+        return governmentType;
+    }
+
+    public void setGovernmentType(String governmentType) {
+        this.governmentType = governmentType;
+    }
+
+    public List<String> getTownIds() {
+        return townIds;
+    }
+
+    public Set<String> getAllies() {
+        return allies;
+    }
+
+    public Set<String> getEnemies() {
+        return enemies;
+    }
+
+    public boolean isAtWar() {
+        return atWar;
+    }
+
+    public void setAtWar(boolean atWar) {
+        this.atWar = atWar;
+    }
 }
