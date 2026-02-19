@@ -1,0 +1,31 @@
+{
+    "schemaVersion": 1,
+    "id": "warpolitical",
+    "version": "${version}",
+    "name": "PoliticalEngine",
+    "description": "Движок войн и политики для Minecraft",
+    "authors": [
+        "Vine0Zerro"
+    ],
+    "contact": {
+        "sources": "https://github.com/Vine0Zerro/PoliticalEngine"
+    },
+    "license": "MIT",
+    "icon": "icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "com.warpolitical.WarPoliticalMod"
+        ]
+    },
+    "mixins": [],
+    "depends": {
+        "fabricloader": ">=0.14.0",
+        "fabric-api": "*",
+        "minecraft": "~1.20.1",
+        "java": ">=17"
+    },
+    "suggests": {
+        "bluemap": "*"
+    }
+}
