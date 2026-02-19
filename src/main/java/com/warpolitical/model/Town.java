@@ -1,70 +1,134 @@
 package com.warpolitical.model;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 
 public class Town {
 
+    public static final int MAX_CHUNKS = 200;
+
+    private final String id;
     private String name;
-    private UUID mayor;
-    private String nationName;
-    private final Set<UUID> residents = new HashSet<>();
-    private final Set<ClaimedChunk> claims = new HashSet<>();
-    private long createdAt;
+    private String nationId;
+    private String mayorName;
+    private int centerX;
+    private int centerZ;
+    private String worldName;
+    private String color;
+    private final Set<String> claimedChunkKeys = new HashSet<>();
+    private final Set<String> residents = new HashSet<>();
+    private boolean pvpEnabled = true;
+    private boolean explosionsEnabled = false;
 
-    public Town(String name, UUID mayor) {
+    public Town(String id, String name, String nationId,
+                int centerX, int centerZ, String worldName) {
+        this.id = id;
         this.name = name;
-        this.mayor = mayor;
-        this.residents.add(mayor);
-        this.createdAt = System.currentTimeMillis();
+        this.nationId = nationId;
+        this.centerX = centerX;
+        this.centerZ = centerZ;
+        this.worldName = worldName;
+        this.color = generateRandomColor();
     }
 
-    public boolean addResident(UUID player) {
-        return residents.add(player);
+    public boolean canClaimMore() {
+        return claimedChunkKeys.size() < MAX_CHUNKS;
     }
 
-    public boolean removeResident(UUID player) {
-        if (player.equals(mayor)) return false;
-        return residents.remove(player);
+    public int getChunkCount() {
+        return claimedChunkKeys.size();
     }
 
-    public boolean isResident(UUID player) {
-        return residents.contains(player);
+    public void addChunk(String chunkKey) {
+        claimedChunkKeys.add(chunkKey);
     }
 
-    public boolean addClaim(ClaimedChunk chunk) {
-        return claims.add(chunk);
+    public void removeChunk(String chunkKey) {
+        claimedChunkKeys.remove(chunkKey);
     }
 
-    public boolean removeClaim(ClaimedChunk chunk) {
-        return claims.remove(chunk);
+    public boolean ownsChunk(String chunkKey) {
+        return claimedChunkKeys.contains(chunkKey);
     }
 
-    public boolean hasClaim(int chunkX, int chunkZ, String world) {
-        return claims.stream().anyMatch(c ->
-                c.getChunkX() == chunkX &&
-                c.getChunkZ() == chunkZ &&
-                c.getWorldName().equals(world));
+    private String generateRandomColor() {
+        Random r = new Random(id.hashCode());
+        return String.format("#%02x%02x%02x",
+                r.nextInt(200) + 55,
+                r.nextInt(200) + 55,
+                r.nextInt(200) + 55);
     }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public String getId() {
+        return id;
+    }
 
-    public UUID getMayor() { return mayor; }
-    public void setMayor(UUID mayor) { this.mayor = mayor; }
+    public String getName() {
+        return name;
+    }
 
-    public String getNationName() { return nationName; }
-    public void setNationName(String nationName) { this.nationName = nationName; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public Set<UUID> getResidents() { return Collections.unmodifiableSet(residents); }
-    public Set<ClaimedChunk> getClaims() { return Collections.unmodifiableSet(claims); }
+    public String getNationId() {
+        return nationId;
+    }
 
-    public long getCreatedAt() { return createdAt; }
-    public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
+    public void setNationId(String nationId) {
+        this.nationId = nationId;
+    }
 
-    @Override
-    public String toString() {
-        return "Town{name='" + name + "', mayor=" + mayor +
-               ", residents=" + residents.size() +
-               ", claims=" + claims.size() + "}";
+    public String getMayorName() {
+        return mayorName;
+    }
+
+    public void setMayorName(String mayorName) {
+        this.mayorName = mayorName;
+    }
+
+    public int getCenterX() {
+        return centerX;
+    }
+
+    public int getCenterZ() {
+        return centerZ;
+    }
+
+    public String getWorldName() {
+        return worldName;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public Set<String> getClaimedChunkKeys() {
+        return claimedChunkKeys;
+    }
+
+    public Set<String> getResidents() {
+        return residents;
+    }
+
+    public boolean isPvpEnabled() {
+        return pvpEnabled;
+    }
+
+    public void setPvpEnabled(boolean pvpEnabled) {
+        this.pvpEnabled = pvpEnabled;
+    }
+
+    public boolean isExplosionsEnabled() {
+        return explosionsEnabled;
+    }
+
+    public void setExplosionsEnabled(boolean explosionsEnabled) {
+        this.explosionsEnabled = explosionsEnabled;
     }
 }
