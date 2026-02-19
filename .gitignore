@@ -3,25 +3,22 @@
 build/
 out/
 
-# IDE
+# IntelliJ IDEA
 .idea/
 *.iml
-.vscode/
-*.launch
-.settings/
-.classpath
-.project
-bin/
+*.ipr
+*.iws
+
+# Fabric
+run/
+logs/
 
 # OS
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# Minecraft
-run/
-logs/
-
-# Compiled
+# Java
 *.class
 *.jar
 !gradle/wrapper/gradle-wrapper.jar
