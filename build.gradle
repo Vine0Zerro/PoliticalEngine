@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.7-SNAPSHOT'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'java'
 }
 
@@ -12,8 +12,16 @@ base {
 
 repositories {
     mavenCentral()
-    maven { url "https://maven.fabricmc.net/" }
-    maven { url "https://repo.bluecolored.de/releases" }
+    maven {
+        name = "bluecolored"
+        url = "https://repo.bluecolored.de/releases"
+    }
+}
+
+loom {
+    runConfigs.configureEach {
+        ideConfigGenerated = true
+    }
 }
 
 dependencies {
@@ -22,32 +30,25 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    compileOnly "de.bluecolored.bluemap:BlueMapAPI:2.6.2"
+    modCompileOnly "de.bluecolored.bluemap:BlueMapAPI:2.7.1"
 
-    implementation "org.yaml:snakeyaml:2.2"
-    include "org.yaml:snakeyaml:2.2"
+    include(implementation("org.yaml:snakeyaml:2.2"))
 }
 
 processResources {
-    inputs.property "version", project.mod_version
-
+    inputs.property "version", project.version
     filesMatching("fabric.mod.json") {
-        expand "version": project.mod_version
+        expand "version": project.version
     }
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.release = 17
+    options.release = 17
+    options.encoding = "UTF-8"
 }
 
 java {
+    withSourcesJar()
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
-    withSourcesJar()
-}
-
-jar {
-    from("LICENSE") {
-        rename { "${it}_${project.archives_base_name}" }
-    }
 }
